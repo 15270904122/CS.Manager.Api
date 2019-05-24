@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using CS.Manager.Infrastructure.Utils;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace CS.Manager.Application.Auth
 {
@@ -88,6 +89,16 @@ namespace CS.Manager.Application.Auth
             };
             await RedisHelper.SetAsync(token, result, hour * 60 * 60);
             return Result.FromData(tokenInfo);
+        }
+
+        /// <summary>
+        /// 验证Token
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<Result<ClaimsPrincipal>> VerifyTokenAsync(string token)
+        {
+            return Result.FromCode<ClaimsPrincipal>(ResultCode.InvalidToken);
         }
     }
 }

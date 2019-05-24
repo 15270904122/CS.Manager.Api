@@ -1,4 +1,5 @@
 ﻿using CS.Manager.Application.Auth.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace CS.Manager.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiExplorerSettings]
+    [ApiExplorerSettings, Authorize]
     public class ApiController : ControllerBase
     {
 

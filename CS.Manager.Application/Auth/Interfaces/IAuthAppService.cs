@@ -2,6 +2,7 @@
 using CS.Manager.Infrastructure.Result;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +26,13 @@ namespace CS.Manager.Application.Auth.Interfaces
         /// <param name="loginInput"></param>
         /// <returns></returns>
         Task<Result<TokenInfo>> CreateTokenAsync(LoginInput loginInput);
+
+        /// <summary>
+        /// 验证Token
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        Task<Result<ClaimsPrincipal>> VerifyTokenAsync(string token);
 
     }
 }

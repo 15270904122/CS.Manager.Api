@@ -27,6 +27,9 @@ using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
 using CS.Manager.Infrastructure.Utils;
 using CS.Manager.Infrastructure.Filter;
+using CS.Manager.Infrastructure.Middlewares;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using CS.Manager.Api.Authorization;
 
 namespace CS.Manager.Api
 {
@@ -70,7 +73,7 @@ namespace CS.Manager.Api
             });
             services.AddSingleton<IFreeSql<MasterDb>>(MasterManagerDB);
             services.AddFreeRepository(filter => filter.Apply<ISoftDelete>("SoftDelete", a => a.IsDeleted == false), GetType().Assembly);
-            services.AddTransient<IAuthAppService, AuthAppService>();
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(p =>
@@ -82,6 +85,20 @@ namespace CS.Manager.Api
                 });
             });
 
+            ////添加认证Cookie信息
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            //    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+            //    {
+            //        options.LoginPath = "/login";
+            //        options.LogoutPath = "/logout";
+            //        options.AccessDeniedPath = "/login";
+            //        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+            //        options.SlidingExpiration = true;
+            //        options.Cookie.Name = "CS.Manager";
+            //    });
+            //Token 身份认证
+            services.AddAuthentication(ApiTokenOptions.Scheme)
+           .AddScheme<ApiTokenOptions, ApiTokenHandler>(ApiTokenOptions.Scheme, p => { });
             // Api文档
             services.AddSwaggerGen(c =>
             {
@@ -103,7 +120,14 @@ namespace CS.Manager.Api
             services.Configure<MvcOptions>(mvcOptions =>
             {
                 mvcOptions.Filters.Add<ValidateResultFilter>();
+                mvcOptions.Filters.Add<ActionLogFilter>();
+                mvcOptions.Filters.Add<ValidateAuthorizedRequestFilter>();
+
             });
+
+            #region 应用服务
+            services.AddTransient<IAuthAppService, AuthAppService>();
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -121,6 +145,15 @@ namespace CS.Manager.Api
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            // Authentication
+            app.UseAuthentication();
+
+            // HttpLog
+            app.UseMiddleware<HttpLogMiddleware>();
+
+            app.UseCors();
+
             app.UseMvc();
 
             // Api文档
