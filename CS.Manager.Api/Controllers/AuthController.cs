@@ -2,6 +2,7 @@
 using CS.Manager.Dto.Auth;
 using CS.Manager.Infrastructure.Result;
 using CS.Manager.Infrastructure.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace CS.Manager.Api.Controllers
         /// <param name="loginRequest">请求参数</param>
         /// <param name="authAppService">登陆服务</param>
         /// <returns></returns>
-        [HttpPost("Login")]
+        [HttpPost("Login"), AllowAnonymous]
         public async Task<Result<LoginOutput>> Login([FromBody, Required]LoginRequest loginRequest, [FromServices] IAuthAppService authAppService)
         {
             return await authAppService.LoginAsync(loginRequest.MapTo<LoginInput>());
@@ -38,7 +39,7 @@ namespace CS.Manager.Api.Controllers
         /// <param name="loginRequest">请求参数</param>
         /// <param name="authAppService">登陆服务</param>
         /// <returns></returns>
-        [HttpPost("GetToken")]
+        [HttpPost("GetToken"), AllowAnonymous]
         public async Task<Result<TokenInfo>> CreateToken([FromBody, Required]LoginRequest loginRequest, [FromServices] IAuthAppService authAppService)
         {
             return await authAppService.CreateTokenAsync(loginRequest.MapTo<LoginInput>());

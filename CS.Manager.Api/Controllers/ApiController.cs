@@ -1,4 +1,5 @@
-﻿using CS.Manager.Application.Auth.Interfaces;
+﻿using CS.Manager.Api.Authorization;
+using CS.Manager.Application.Auth.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

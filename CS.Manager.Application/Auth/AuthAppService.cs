@@ -12,6 +12,7 @@ using CS.Manager.Infrastructure.Utils;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace CS.Manager.Application.Auth
 {
@@ -22,9 +23,8 @@ namespace CS.Manager.Application.Auth
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IConfiguration _configuration;
-
         private readonly IFreeSql<MasterDb> _masterFreeSql;
-        public AuthAppService(IServiceProvider serviceProvider, IConfiguration configuration)
+        public AuthAppService(IServiceProvider serviceProvider, IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             _serviceProvider = serviceProvider;
             _masterFreeSql = serviceProvider.GetService<IFreeSql<MasterDb>>();

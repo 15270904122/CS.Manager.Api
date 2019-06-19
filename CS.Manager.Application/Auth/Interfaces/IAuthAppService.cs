@@ -1,5 +1,6 @@
 ﻿using CS.Manager.Dto.Auth;
 using CS.Manager.Infrastructure.Result;
+using CS.Manager.Infrastructure.Utils;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -11,7 +12,7 @@ namespace CS.Manager.Application.Auth.Interfaces
     /// <summary>
     /// 身份认证应用服务
     /// </summary>
-    public interface IAuthAppService
+    public interface IAuthAppService : ISingletonDependency
     {
         /// <summary>
         /// 登陆

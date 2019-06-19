@@ -30,6 +30,15 @@ using CS.Manager.Infrastructure.Filter;
 using CS.Manager.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using CS.Manager.Api.Authorization;
+using NLog.Extensions.Logging;
+using NLog.Web;
+using CS.Manager.EasyNetQ.Configuration;
+using CS.Manager.EasyNetQ.Consumer;
+using EasyNetQ.Consumer;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using EasyNetQ;
+using CS.Manager.Application.RabbitMq.Interfaces;
+using CS.Manager.Application.RabbitMq;
 
 namespace CS.Manager.Api
 {
@@ -57,7 +66,6 @@ namespace CS.Manager.Api
         {
             // Configuration
             services.AddSingleton(Configuration);
-            services.AddSingleton<IConfiguration>(Configuration);
 
             // Redis单例模式
             var redisConStr = Configuration.GetConnectionString("DefaultRedis");
@@ -96,6 +104,7 @@ namespace CS.Manager.Api
             //        options.SlidingExpiration = true;
             //        options.Cookie.Name = "CS.Manager";
             //    });
+
             //Token 身份认证
             services.AddAuthentication(ApiTokenOptions.Scheme)
            .AddScheme<ApiTokenOptions, ApiTokenHandler>(ApiTokenOptions.Scheme, p => { });
@@ -121,17 +130,35 @@ namespace CS.Manager.Api
             {
                 mvcOptions.Filters.Add<ValidateResultFilter>();
                 mvcOptions.Filters.Add<ActionLogFilter>();
-                mvcOptions.Filters.Add<ValidateAuthorizedRequestFilter>();
-
+                //mvcOptions.Filters.Add<ApiAuthorizationFilter>();
             });
+
+            //services.BatchRegisterService(new Assembly[] { Assembly.GetExecutingAssembly()
+            //    , Assembly.Load("CS.Manager.Application")
+            //    , Assembly.Load("CS.Manager.Application")
+            //    , Assembly.Load("CS.Manager.EasyNetQ")
+            //    , Assembly.Load("CS.Manager.Job")
+            //    , Assembly.Load("CS.Repository")
+            //}, typeof(ISingletonDependency));
 
             #region 应用服务
             services.AddTransient<IAuthAppService, AuthAppService>();
+            services.AddTransient<IRabbitMqAppService, RabbitMqAppService>();
+
+            #endregion
+
+            #region RabbitMq
+
+            string rabbitMqConnection = Configuration.GetConnectionString("RabbitMQ");
+            services.AddSingleton(RabbitHutch.CreateBus(rabbitMqConnection));
+            services.AddSingleton<IBaseConsumer, TestConsumer>();
+            services.Replace(ServiceDescriptor.Singleton<IConsumerErrorStrategy, ConsumerErrorStategy>());
+
             #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -145,10 +172,15 @@ namespace CS.Manager.Api
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            //使用NLog作为日志记录工具
+            loggerFactory.AddNLog();
+            //引入Nlog配置文件
+            env.ConfigureNLog("NLog.config");
 
             // Authentication
             app.UseAuthentication();
-
+            // rabbitmq
+            app.UseRabbitMQ();
             // HttpLog
             app.UseMiddleware<HttpLogMiddleware>();
 
@@ -157,7 +189,6 @@ namespace CS.Manager.Api
             app.UseMvc();
 
             // Api文档
-
             app.UseSwagger(c => { c.RouteTemplate = "{documentName}/swagger.json"; });
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/CS.Manager.Api/swagger.json", "AdminApi"); });
         }

@@ -14,12 +14,14 @@
 
   <ItemGroup>
     <PackageReference Include="CSRedisCore" Version="3.0.57" />
+    <PackageReference Include="EasyNetQ" Version="3.5.0" />
     <PackageReference Include="FreeSql.AdminLTE" Version="0.5.21" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CS.Manager.Dto\CS.Manager.Dto.csproj" />
+    <ProjectReference Include="..\CS.Manager.EasyNetQ\CS.Manager.EasyNetQ.csproj" />
     <ProjectReference Include="..\CS.Manager.Infrastructure\CS.Manager.Infrastructure.csproj" />
     <ProjectReference Include="..\CS.Repository\CS.Repository.csproj" />
   </ItemGroup>

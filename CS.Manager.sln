@@ -3,15 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS.Manager.Api", "CS.Manager.Api\CS.Manager.Api.csproj", "{52038145-2BEA-4AD8-901A-FE201F9EEA17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS.Manager.Api", "CS.Manager.Api\CS.Manager.Api.csproj", "{52038145-2BEA-4AD8-901A-FE201F9EEA17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS.Repository", "CS.Repository\CS.Repository.csproj", "{438FB641-F1D2-4884-9184-8BDAF90AEE67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS.Repository", "CS.Repository\CS.Repository.csproj", "{438FB641-F1D2-4884-9184-8BDAF90AEE67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS.Manager.Application", "CS.Manager.Application\CS.Manager.Application.csproj", "{86B78CCA-7F10-4AB9-8CAC-228E72523B31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS.Manager.Application", "CS.Manager.Application\CS.Manager.Application.csproj", "{86B78CCA-7F10-4AB9-8CAC-228E72523B31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS.Manager.Infrastructure", "CS.Manager.Infrastructure\CS.Manager.Infrastructure.csproj", "{ADEA357B-A573-4812-BD50-9786F3E263A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS.Manager.Infrastructure", "CS.Manager.Infrastructure\CS.Manager.Infrastructure.csproj", "{ADEA357B-A573-4812-BD50-9786F3E263A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS.Manager.Dto", "CS.Manager.Dto\CS.Manager.Dto.csproj", "{12D72D60-1B28-42E1-8B99-8F55D0A6C24A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS.Manager.Dto", "CS.Manager.Dto\CS.Manager.Dto.csproj", "{12D72D60-1B28-42E1-8B99-8F55D0A6C24A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS.Manager.EasyNetQ", "CS.Manager.EasyNetQ\CS.Manager.EasyNetQ.csproj", "{1CCC7A3A-7FC2-41CB-A7DD-04F47314BA4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS.Manager.Job", "CS.Manager.Job\CS.Manager.Job.csproj", "{0F174F0C-601A-4AB2-8DF9-0B152C077A25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{12D72D60-1B28-42E1-8B99-8F55D0A6C24A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12D72D60-1B28-42E1-8B99-8F55D0A6C24A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12D72D60-1B28-42E1-8B99-8F55D0A6C24A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CCC7A3A-7FC2-41CB-A7DD-04F47314BA4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CCC7A3A-7FC2-41CB-A7DD-04F47314BA4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CCC7A3A-7FC2-41CB-A7DD-04F47314BA4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CCC7A3A-7FC2-41CB-A7DD-04F47314BA4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F174F0C-601A-4AB2-8DF9-0B152C077A25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F174F0C-601A-4AB2-8DF9-0B152C077A25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F174F0C-601A-4AB2-8DF9-0B152C077A25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F174F0C-601A-4AB2-8DF9-0B152C077A25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

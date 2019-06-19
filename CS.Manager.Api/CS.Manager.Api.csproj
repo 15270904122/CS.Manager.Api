@@ -20,6 +20,8 @@
     <PackageReference Include="CSRedisCore" Version="3.0.57" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="NLog" Version="4.6.3" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.2" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="4.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="4.0.1" />
   </ItemGroup>
@@ -27,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CS.Manager.Application\CS.Manager.Application.csproj" />
     <ProjectReference Include="..\CS.Manager.Dto\CS.Manager.Dto.csproj" />
+    <ProjectReference Include="..\CS.Manager.EasyNetQ\CS.Manager.EasyNetQ.csproj" />
     <ProjectReference Include="..\CS.Manager.Infrastructure\CS.Manager.Infrastructure.csproj" />
     <ProjectReference Include="..\CS.Repository\CS.Repository.csproj" />
   </ItemGroup>
