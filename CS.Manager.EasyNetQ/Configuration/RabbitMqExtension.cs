@@ -1,5 +1,6 @@
 ﻿using CS.Manager.EasyNetQ.Consumer;
 using EasyNetQ;
+using EasyNetQ.DI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;

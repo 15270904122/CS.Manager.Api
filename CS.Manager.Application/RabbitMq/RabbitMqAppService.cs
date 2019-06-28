@@ -1,10 +1,12 @@
 ﻿using CS.Manager.Application.RabbitMq.Interfaces;
 using CS.Manager.EasyNetQ.ConsumeModels;
 using EasyNetQ;
+using EasyNetQ.Consumer;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CS.Manager.Application.RabbitMq
 {
@@ -12,8 +14,10 @@ namespace CS.Manager.Application.RabbitMq
     {
 
         private IBus _bus;
-        public RabbitMqAppService(IBus bus)
+        private IServiceProvider _serviceProvider;
+        public RabbitMqAppService(IBus bus, IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
             _bus = bus;
         }
 
@@ -32,6 +36,7 @@ namespace CS.Manager.Application.RabbitMq
         /// <returns></returns>
         public async Task PulishError()
         {
+            var service = _serviceProvider.GetService<IConsumerErrorStrategy>();
             await _bus.PublishAsync(new Test { TaskId = Guid.Empty });
         }
     }

@@ -39,6 +39,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using EasyNetQ;
 using CS.Manager.Application.RabbitMq.Interfaces;
 using CS.Manager.Application.RabbitMq;
+using EasyNetQ.DI;
 
 namespace CS.Manager.Api
 {
@@ -148,11 +149,11 @@ namespace CS.Manager.Api
             #endregion
 
             #region RabbitMq
-
+            services.AddSingleton<IServiceRegister, ServiceCollectionAdapter>();
             string rabbitMqConnection = Configuration.GetConnectionString("RabbitMQ");
-            services.AddSingleton(RabbitHutch.CreateBus(rabbitMqConnection));
-            services.AddSingleton<IBaseConsumer, TestConsumer>();
+            services.RegisterEasyNetQ(rabbitMqConnection);
             services.Replace(ServiceDescriptor.Singleton<IConsumerErrorStrategy, ConsumerErrorStategy>());
+            services.AddSingleton<IBaseConsumer, TestConsumer>();
 
             #endregion
         }

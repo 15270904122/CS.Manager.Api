@@ -25,14 +25,16 @@ namespace CS.Manager.EasyNetQ.Configuration
         private IConnection connection;
 
         public ConsumerErrorStategy(
+            ILoggerFactory loggerFactory,
             EasyNetQComponent.IConnectionFactory connectionFactory,
-            ILogger logger,
             ISerializer serializer,
             IConventions conventions,
             ITypeNameSerializer typeNameSerializer,
-            IErrorMessageSerializer errorMessageSerializer)
+            IErrorMessageSerializer errorMessageSerializer
+            )
         {
-            this._logger = logger;
+            this._logger = loggerFactory.CreateLogger(this.GetType().FullName);
+
             this.connectionFactory = connectionFactory;
             this.serializer = serializer;
             this.conventions = conventions;
@@ -138,7 +140,7 @@ namespace CS.Manager.EasyNetQ.Configuration
         /// <param name="context"></param>
         /// <param name="exception"></param>
         /// <returns></returns>
-        public virtual AckStrategy HandleConsumerError(ConsumerExecutionContext context, Exception exception)
+        public AckStrategy HandleConsumerError(ConsumerExecutionContext context, Exception exception)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             if (exception == null) throw new ArgumentNullException(nameof(exception));
@@ -215,33 +217,7 @@ namespace CS.Manager.EasyNetQ.Configuration
             return AckStrategies.NackWithRequeue;
         }
 
-        private byte[] CreateErrorMessage(ConsumerExecutionContext context, Exception exception)
-        {
-            var messageAsString = errorMessageSerializer.Serialize(context.Body);
-            var error = new Error
-            {
-                RoutingKey = context.Info.RoutingKey,
-                Exchange = context.Info.Exchange,
-                Queue = context.Info.Queue,
-                Exception = exception.ToString(),
-                Message = messageAsString,
-                DateTime = DateTime.UtcNow
-            };
 
-            if (context.Properties.Headers == null)
-            {
-                error.BasicProperties = context.Properties;
-            }
-            else
-            {
-                error.BasicProperties = (MessageProperties)context.Properties.Clone();
-                error.BasicProperties.Headers = context.Properties.Headers.ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value is byte[]? Encoding.UTF8.GetString((byte[])kvp.Value) : kvp.Value);
-            }
-
-            return serializer.MessageToBytes(typeof(Error), error);
-        }
 
         private bool disposed;
         private bool disposing;
