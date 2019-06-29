@@ -16,10 +16,7 @@ namespace CS.Manager.EasyNetQ.Configuration
     {
         private readonly ILogger _logger;
         private readonly EasyNetQComponent.IConnectionFactory connectionFactory;
-        private readonly ISerializer serializer;
-        private readonly IConventions conventions;
         private readonly ITypeNameSerializer typeNameSerializer;
-        private readonly IErrorMessageSerializer errorMessageSerializer;
         private readonly object syncLock = new object();
 
         private IConnection connection;
@@ -27,19 +24,13 @@ namespace CS.Manager.EasyNetQ.Configuration
         public ConsumerErrorStategy(
             ILoggerFactory loggerFactory,
             EasyNetQComponent.IConnectionFactory connectionFactory,
-            ISerializer serializer,
-            IConventions conventions,
-            ITypeNameSerializer typeNameSerializer,
-            IErrorMessageSerializer errorMessageSerializer
+            ITypeNameSerializer typeNameSerializer
             )
         {
             this._logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             this.connectionFactory = connectionFactory;
-            this.serializer = serializer;
-            this.conventions = conventions;
             this.typeNameSerializer = typeNameSerializer;
-            this.errorMessageSerializer = errorMessageSerializer;
         }
 
         /// <summary>

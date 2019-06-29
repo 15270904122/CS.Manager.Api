@@ -21,7 +21,7 @@ namespace CS.Manager.EasyNetQ.Consumer
         public void InitSubscribe()
         {
             _bus.SubscribeAsync<Test>("CS_Manager_Test",
-              async input => await ProcessMessage(input));
+               input => ProcessMessage(input));
         }
 
         public async Task ProcessMessage(Test test)

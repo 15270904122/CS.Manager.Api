@@ -40,6 +40,11 @@ using EasyNetQ;
 using CS.Manager.Application.RabbitMq.Interfaces;
 using CS.Manager.Application.RabbitMq;
 using EasyNetQ.DI;
+using Hangfire;
+using Hangfire.Dashboard;
+using CS.Manager.Infrastructure.Jobs.HangfireJobExtensions;
+using StackExchange.Redis;
+using Hangfire.Redis;
 
 namespace CS.Manager.Api
 {
@@ -83,6 +88,44 @@ namespace CS.Manager.Api
             services.AddSingleton<IFreeSql<MasterDb>>(MasterManagerDB);
             services.AddFreeRepository(filter => filter.Apply<ISoftDelete>("SoftDelete", a => a.IsDeleted == false), GetType().Assembly);
 
+            // Hangfire Job
+            var jobConStr = Configuration.GetConnectionString("HangfireRedis");
+            var jobConnect = ConnectionMultiplexer.Connect(jobConStr);
+            services.Configure<BackgroundJobServerOptions>(options =>
+            {
+                options.ShutdownTimeout = TimeSpan.FromMinutes(30);
+                options.WorkerCount = Math.Min(Environment.ProcessorCount * 5, 20);
+                options.Queues = new[] { "default", "apis", "jobs" };
+            });
+            services.AddHangfire(cfg =>
+            {
+                //使用Redis存储Job队列
+                cfg.UseRedisStorage(jobConnect, new Hangfire.Redis.RedisStorageOptions { Db = 2 });
+
+                // DashboardMetric
+                cfg.UseDashboardMetric(DashboardMetrics.ServerCount)
+                    .UseDashboardMetric(DashboardMetrics.RecurringJobCount)
+                    .UseDashboardMetric(DashboardMetrics.RetriesCount)
+                    .UseDashboardMetric(DashboardMetrics.AwaitingCount)
+                    .UseDashboardMetric(DashboardMetrics.EnqueuedAndQueueCount)
+                    .UseDashboardMetric(DashboardMetrics.ScheduledCount)
+                    .UseDashboardMetric(DashboardMetrics.ProcessingCount)
+                    .UseDashboardMetric(DashboardMetrics.SucceededCount)
+                    .UseDashboardMetric(DashboardMetrics.FailedCount)
+                    .UseDashboardMetric(DashboardMetrics.DeletedCount);
+                if (JobStorage.Current is Hangfire.Redis.RedisStorage redisStorage)
+                {
+                    cfg.UseDashboardMetric(
+                        redisStorage.GetDashboardMetricFromRedisInfo("使用内存", RedisInfoKeys.used_memory_human));
+                    cfg.UseDashboardMetric(
+                        redisStorage.GetDashboardMetricFromRedisInfo("高峰内存", RedisInfoKeys.used_memory_peak_human));
+                }
+                cfg.UseRecurringJob("recurringjob.json");
+                cfg.UseFilter(new AutomaticRetryAttribute { Attempts = 5 });
+                cfg.UseNLogLogProvider();
+            });
+
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(p =>
@@ -93,6 +136,7 @@ namespace CS.Manager.Api
                         .AllowCredentials();
                 });
             });
+
 
             ////添加认证Cookie信息
             //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -149,6 +193,7 @@ namespace CS.Manager.Api
             #endregion
 
             #region RabbitMq
+
             services.AddSingleton<IServiceRegister, ServiceCollectionAdapter>();
             string rabbitMqConnection = Configuration.GetConnectionString("RabbitMQ");
             services.RegisterEasyNetQ(rabbitMqConnection);
@@ -178,6 +223,11 @@ namespace CS.Manager.Api
             //引入Nlog配置文件
             env.ConfigureNLog("NLog.config");
 
+            var dashboardOptions = new DashboardOptions
+            {
+                Authorization = new[] { new HangfireAuthorizationFilter() },
+            };
+            app.UseHangfireDashboard("/hangfire", dashboardOptions);
             // Authentication
             app.UseAuthentication();
             // rabbitmq

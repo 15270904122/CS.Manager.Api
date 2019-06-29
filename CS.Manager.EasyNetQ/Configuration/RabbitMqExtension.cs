@@ -16,14 +16,7 @@ namespace CS.Manager.EasyNetQ.Configuration
         public static IApplicationBuilder UseRabbitMQ(this IApplicationBuilder appBuilder)
         {
             var services = appBuilder.ApplicationServices.CreateScope().ServiceProvider;
-
-            var lifeTime = services.GetService<IApplicationLifetime>();
-            var bus = services.GetService<IBus>();
-            lifeTime.ApplicationStarted.Register(() =>
-            {
-                appBuilder.ApplicationServices.GetServices<IBaseConsumer>().ToList().ForEach(x => x.InitSubscribe());
-            });
-            lifeTime.ApplicationStopped.Register(() => { bus.Dispose(); });
+            services.GetServices<IBaseConsumer>().ToList().ForEach(x => x.InitSubscribe());
             return appBuilder;
         }
     }

@@ -12,7 +12,6 @@ namespace CS.Manager.Application.RabbitMq
 {
     public class RabbitMqAppService : IRabbitMqAppService
     {
-
         private IBus _bus;
         private IServiceProvider _serviceProvider;
         public RabbitMqAppService(IBus bus, IServiceProvider serviceProvider)
@@ -36,7 +35,6 @@ namespace CS.Manager.Application.RabbitMq
         /// <returns></returns>
         public async Task PulishError()
         {
-            var service = _serviceProvider.GetService<IConsumerErrorStrategy>();
             await _bus.PublishAsync(new Test { TaskId = Guid.Empty });
         }
     }
