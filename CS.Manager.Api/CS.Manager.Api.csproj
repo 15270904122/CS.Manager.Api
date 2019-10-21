@@ -31,6 +31,7 @@
     <ProjectReference Include="..\CS.Manager.Dto\CS.Manager.Dto.csproj" />
     <ProjectReference Include="..\CS.Manager.EasyNetQ\CS.Manager.EasyNetQ.csproj" />
     <ProjectReference Include="..\CS.Manager.Infrastructure\CS.Manager.Infrastructure.csproj" />
+    <ProjectReference Include="..\CS.Manager.Job\CS.Manager.Job.csproj" />
     <ProjectReference Include="..\CS.Repository\CS.Repository.csproj" />
   </ItemGroup>
 
@@ -38,8 +39,11 @@
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="recurringjobs.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties recurringjobs_1json__JsonSchema="http://jsonapi.org/schema" /></VisualStudio></ProjectExtensions>
 
 </Project>

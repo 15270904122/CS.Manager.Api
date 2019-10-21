@@ -1,13 +1,12 @@
 ﻿using CS.Manager.Application.Auth.Interfaces;
 using CS.Manager.Dto.Auth;
+using CS.Manager.Infrastructure.Jobs;
 using CS.Manager.Infrastructure.Result;
 using CS.Manager.Infrastructure.Utils;
+using CS.Manager.Job.BackgroundJobs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CS.Manager.Api.Controllers
@@ -43,6 +42,17 @@ namespace CS.Manager.Api.Controllers
         public async Task<Result<TokenInfo>> CreateToken([FromBody, Required]LoginRequest loginRequest, [FromServices] IAuthAppService authAppService)
         {
             return await authAppService.CreateTokenAsync(loginRequest.MapTo<LoginInput>());
+        }
+
+        /// <summary>
+        /// 测试Job
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("TestJob"), AllowAnonymous]
+        public async Task<Result> TestJob([FromServices] IJobManager jobManager)
+        {
+            jobManager.Enqueue<Demo1, Demo1Args>(new Demo1Args { Name = "1" });
+            return Result.Ok();
         }
     }
 }

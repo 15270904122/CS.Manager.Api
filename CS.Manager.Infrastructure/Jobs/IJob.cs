@@ -17,6 +17,11 @@ namespace CS.Manager.Infrastructure.Jobs
         /// 执行Job任务
         /// </summary>
         Task Execute(TArgs args);
+
+        /// <summary>
+        /// 日志
+        /// </summary>
+        ILogger Logger { get; set; }
     }
 
     /// <summary>
@@ -41,5 +46,6 @@ namespace CS.Manager.Infrastructure.Jobs
         /// 日志
         /// </summary>
         public ILogger Logger { get; set; }
+
     }
 }

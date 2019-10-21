@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using CS.Manager.EasyNetQ.ConsumeModels;
 using Microsoft.Extensions.Logging;
+using CS.Manager.EasyNetQ.Configuration;
 
 namespace CS.Manager.EasyNetQ.Consumer
 {
@@ -15,13 +16,14 @@ namespace CS.Manager.EasyNetQ.Consumer
         private readonly ILogger _logger;
         public TestConsumer(IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
         {
-            _bus = serviceProvider.GetService<IBus>();
+            var bus = serviceProvider.GetService<IBus>();
+
             _logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
         public void InitSubscribe()
         {
             _bus.SubscribeAsync<Test>("CS_Manager_Test",
-               input => ProcessMessage(input));
+              async input => await ProcessMessage(input));
         }
 
         public async Task ProcessMessage(Test test)

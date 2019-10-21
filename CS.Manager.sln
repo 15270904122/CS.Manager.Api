@@ -13,9 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS.Manager.Infrastructure",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS.Manager.Dto", "CS.Manager.Dto\CS.Manager.Dto.csproj", "{12D72D60-1B28-42E1-8B99-8F55D0A6C24A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS.Manager.EasyNetQ", "CS.Manager.EasyNetQ\CS.Manager.EasyNetQ.csproj", "{1CCC7A3A-7FC2-41CB-A7DD-04F47314BA4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS.Manager.EasyNetQ", "CS.Manager.EasyNetQ\CS.Manager.EasyNetQ.csproj", "{1CCC7A3A-7FC2-41CB-A7DD-04F47314BA4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS.Manager.Job", "CS.Manager.Job\CS.Manager.Job.csproj", "{0F174F0C-601A-4AB2-8DF9-0B152C077A25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS.Manager.Job", "CS.Manager.Job\CS.Manager.Job.csproj", "{0F174F0C-601A-4AB2-8DF9-0B152C077A25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS.Manager.Worker", "CS.Manager.Worker\CS.Manager.Worker.csproj", "{7D2C5D8E-3B1E-4FAF-A1DE-06E7AB49E88F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{0F174F0C-601A-4AB2-8DF9-0B152C077A25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F174F0C-601A-4AB2-8DF9-0B152C077A25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F174F0C-601A-4AB2-8DF9-0B152C077A25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D2C5D8E-3B1E-4FAF-A1DE-06E7AB49E88F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D2C5D8E-3B1E-4FAF-A1DE-06E7AB49E88F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D2C5D8E-3B1E-4FAF-A1DE-06E7AB49E88F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D2C5D8E-3B1E-4FAF-A1DE-06E7AB49E88F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

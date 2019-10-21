@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security;
+using System.Text;
 using System.Threading;
 using Hangfire;
 using Hangfire.Logging;
@@ -118,7 +119,7 @@ namespace CS.Manager.Infrastructure.Jobs.HangfireJobExtensions.Configuration
 				{
 					// Do stuff with file  
 					using (var file = new FileStream(ConfigFile, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
-					using (StreamReader reader = new StreamReader(file))
+					using (StreamReader reader = new StreamReader(file,encoding: Encoding.UTF8))
 						content = reader.ReadToEnd();
 
 					break; // When done we can break loop

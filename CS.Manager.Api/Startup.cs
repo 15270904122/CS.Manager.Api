@@ -22,13 +22,11 @@ using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
 using CS.Manager.Infrastructure.Utils;
 using CS.Manager.Infrastructure.Filter;
 using CS.Manager.Infrastructure.Middlewares;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using CS.Manager.Api.Authorization;
 using NLog.Extensions.Logging;
 using NLog.Web;
@@ -36,7 +34,6 @@ using CS.Manager.EasyNetQ.Configuration;
 using CS.Manager.EasyNetQ.Consumer;
 using EasyNetQ.Consumer;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using EasyNetQ;
 using CS.Manager.Application.RabbitMq.Interfaces;
 using CS.Manager.Application.RabbitMq;
 using EasyNetQ.DI;
@@ -45,6 +42,7 @@ using Hangfire.Dashboard;
 using CS.Manager.Infrastructure.Jobs.HangfireJobExtensions;
 using StackExchange.Redis;
 using Hangfire.Redis;
+using CS.Manager.Infrastructure.Jobs;
 
 namespace CS.Manager.Api
 {
@@ -88,7 +86,7 @@ namespace CS.Manager.Api
             services.AddSingleton<IFreeSql<MasterDb>>(MasterManagerDB);
             services.AddFreeRepository(filter => filter.Apply<ISoftDelete>("SoftDelete", a => a.IsDeleted == false), GetType().Assembly);
 
-            // Hangfire Job
+            #region Hangfire Job
             var jobConStr = Configuration.GetConnectionString("HangfireRedis");
             var jobConnect = ConnectionMultiplexer.Connect(jobConStr);
             services.Configure<BackgroundJobServerOptions>(options =>
@@ -120,11 +118,14 @@ namespace CS.Manager.Api
                     cfg.UseDashboardMetric(
                         redisStorage.GetDashboardMetricFromRedisInfo("高峰内存", RedisInfoKeys.used_memory_peak_human));
                 }
-                cfg.UseRecurringJob("recurringjob.json");
+                cfg.UseRecurringJob("recurringjobs.json");
                 cfg.UseFilter(new AutomaticRetryAttribute { Attempts = 5 });
                 cfg.UseNLogLogProvider();
-            });
+             
 
+            });
+            services.AddSingleton<IJobManager, HangfireJobManager>();
+            #endregion
 
             services.AddCors(options =>
             {
@@ -195,11 +196,10 @@ namespace CS.Manager.Api
             #region RabbitMq
 
             services.AddSingleton<IServiceRegister, ServiceCollectionAdapter>();
-            string rabbitMqConnection = Configuration.GetConnectionString("RabbitMQ");
-            services.RegisterEasyNetQ(rabbitMqConnection);
+            string rabbitMqConnection1 = Configuration.GetConnectionString("RabbitMQ1");
+            services.RegisterEasyNetQ(rabbitMqConnection1);
             services.Replace(ServiceDescriptor.Singleton<IConsumerErrorStrategy, ConsumerErrorStategy>());
             services.AddSingleton<IBaseConsumer, TestConsumer>();
-
             #endregion
         }
 
@@ -227,11 +227,12 @@ namespace CS.Manager.Api
             {
                 Authorization = new[] { new HangfireAuthorizationFilter() },
             };
+            app.UseHangfireServer();
             app.UseHangfireDashboard("/hangfire", dashboardOptions);
             // Authentication
             app.UseAuthentication();
-            // rabbitmq
-            app.UseRabbitMQ();
+            //rabbitmq Subscribe
+            app.UseRabbitMQSubscribe();
             // HttpLog
             app.UseMiddleware<HttpLogMiddleware>();
 

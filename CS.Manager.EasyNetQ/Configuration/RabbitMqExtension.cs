@@ -13,7 +13,7 @@ namespace CS.Manager.EasyNetQ.Configuration
 {
     public static class RabbitMqExtension
     {
-        public static IApplicationBuilder UseRabbitMQ(this IApplicationBuilder appBuilder)
+        public static IApplicationBuilder UseRabbitMQSubscribe(this IApplicationBuilder appBuilder)
         {
             var services = appBuilder.ApplicationServices.CreateScope().ServiceProvider;
             services.GetServices<IBaseConsumer>().ToList().ForEach(x => x.InitSubscribe());

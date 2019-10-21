@@ -31,9 +31,9 @@ namespace CS.Manager.Infrastructure.Jobs.HangfireJobExtensions.Configuration
 
 			if (string.IsNullOrWhiteSpace(jsonContent)) throw new Exception("Json file content is empty.");
 
-			var jsonOptions = JobHelper.FromJson<List<RecurringJobJsonOptions>>(jsonContent);
+			var jsonOptions = SerializationHelper.Deserialize<List<RecurringJobJsonOptions>>(jsonContent); 
 
-			foreach (var o in jsonOptions)
+            foreach (var o in jsonOptions)
 				yield return Convert(o);
 		}
 

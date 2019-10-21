@@ -1,7 +1,9 @@
-{
-  "job-name": "≤‚ ‘",
-  "job-type": " CS.Manager.Job.TestJob, CS.Manager.Api",
-  "cron-expression": "*/10 * * * *",
-  "timezone": "China Standard Time",
-  "queue": "jobs"
-},
+[
+  {
+    "job-name": "≤‚ ‘",
+    "job-type": " CS.Manager.Job.RecurringJobs.TestJob, CS.Manager.Job",
+    "cron-expression": "*/10 * * * *",
+    "timezone": "China Standard Time",
+    "queue": "jobs"
+  }
+]
